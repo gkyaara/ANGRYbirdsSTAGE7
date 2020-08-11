@@ -10,8 +10,11 @@ var bird, slingshot;
 
 var gameState = "onSling";
 
+var bg = "sprites/bg.png";
+var score=0;
+
 function preload() {
-    backgroundImg = loadImage("sprites/bg.png");
+   getBackground();
 }
 
 function setup(){
@@ -39,13 +42,18 @@ function setup(){
     log5 = new Log(870,120,150, -PI/7);
 
     bird = new Bird(200,50);
+    
 
     //log6 = new Log(230,180,80, PI/2);
     slingshot = new SlingShot(bird.body,{x:200, y:50});
+
+    //getTime();
 }
 
 function draw(){
-    background(backgroundImg);
+    if(backgroundImg){
+        background(backgroundImg);
+    }
     Engine.update(engine);
     //strokeWeight(4);
     box1.display();
@@ -66,7 +74,13 @@ function draw(){
     bird.display();
     platform.display();
     //log6.display();
-    slingshot.display();    
+    slingshot.display(); 
+    fill(255);
+    textSize(35);
+    text("score: "+score,width-300,50); 
+    pig1.score();
+    pig3.score();
+     
 }
 
 function mouseDragged(){
@@ -83,6 +97,45 @@ function mouseReleased(){
 
 function keyPressed(){
     if(keyCode === 32){
-       // slingshot.attach(bird.body);
+        //slingshot.attach(bird.body);
     }
 }
+
+
+async function getBackground(){
+    var response = await fetch("http://worldtimeapi.org/api/timezone/America/Chicago");
+    var responsejson = await response.json();
+    var dt = responsejson.datetime;
+    //console.log(dt);
+
+    var hour = dt.slice(11, 13);
+    console.log(hour);
+    if(hour>= 06 && hour<=20){
+        bg="sprites/bg.png";
+    }
+    else{
+         bg="sprites/bg2.jpg";
+    }
+
+    backgroundImg=loadImage(bg);
+
+}
+
+
+/*
+JSON
+- JavaScript Object Notation
+- created inside {..}
+- Index name
+- Separated by a comma
+
+
+API calls
+-Application Program Interface
+- getting information from another website
+-fetch() 
+
+
+-Synchronous functions - it just jumps to the next line after every line (one line at a time)
+-Asynchronous functions - Which waits for some lines to be completed before jumping to the next line
+*/
